@@ -64,7 +64,7 @@ class _details extends State<details>{
                       ),
                     ),
                   ),
-
+// taha is great
                   // Name in the middle
                   Column(
                     children: const [
