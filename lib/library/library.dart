@@ -1,0 +1,11 @@
+import 'dart:ui';
+import 'package:exp/model_classes/category_list.dart';
+import 'package:exp/model_classes/items_list.dart';
+import 'package:exp/provider/counter%20provider.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:exp/provider/stock_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
