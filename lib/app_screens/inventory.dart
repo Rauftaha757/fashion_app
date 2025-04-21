@@ -12,6 +12,9 @@ class Inventory extends StatefulWidget {
 }
 
 class _InventoryState extends State<Inventory> {
+  List<item_model_class> filterList = [];
+  String? selectedCategory;
+
   @override
   void initState() {
     super.initState();
@@ -19,18 +22,39 @@ class _InventoryState extends State<Inventory> {
 
     stockProvider.fetchData().then((_) {
       if (stockProvider.list.isEmpty) {
-        stockProvider.loadInitialStock(show_stock); // this comes from your model class
+        stockProvider.loadInitialStock(show_stock); // Load initial data
       }
     });
   }
-  final List<category> categoryList = [];
+
+  final categoryList = category_list;
+
+  void filter(int index) {
+    final stockProvider = Provider.of<StockProvider>(context, listen: false);
+    final stock = stockProvider.list;
+    final selected = categoryList[index].name;
+
+    setState(() {
+      if (selectedCategory == selected) {
+        selectedCategory = null;
+        filterList = [];
+      } else {
+        selectedCategory = selected;
+        filterList = stock
+            .where((product) =>
+        product.category.toLowerCase() == selected.toLowerCase())
+            .toList();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final PageController controller = PageController(viewportFraction: 0.65);
+    final PageController controller = PageController(viewportFraction: 0.70);
+
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
             // Header row
             Padding(
@@ -38,7 +62,6 @@ class _InventoryState extends State<Inventory> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Back arrow
                   Material(
                     elevation: 2,
                     shape: const CircleBorder(),
@@ -46,9 +69,6 @@ class _InventoryState extends State<Inventory> {
                     child: Container(
                       width: 70,
                       height: 70,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(35),
-                      ),
                       child: const Center(
                         child: FaIcon(
                           FontAwesomeIcons.arrowLeft,
@@ -58,28 +78,26 @@ class _InventoryState extends State<Inventory> {
                       ),
                     ),
                   ),
-
-                  // Name in the middle
                   Column(
                     children: const [
                       Text(
                         "T A Y L O R ",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Poppins",
-                            fontSize: 26),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Poppins",
+                          fontSize: 26,
+                        ),
                       ),
                       Text(
                         " S H A W N ",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Poppins",
-                            fontSize: 22),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Poppins",
+                          fontSize: 22,
+                        ),
                       ),
                     ],
                   ),
-
-                  // Shopping bag icon
                   Material(
                     elevation: 2,
                     shape: const CircleBorder(),
@@ -104,7 +122,7 @@ class _InventoryState extends State<Inventory> {
               ),
             ),
 
-            // Banner image
+            // Banner
             Container(
               width: 380,
               height: 150,
@@ -127,27 +145,38 @@ class _InventoryState extends State<Inventory> {
               height: 80,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: category_list.length,
+                itemCount: categoryList.length,
                 itemBuilder: (context, index) {
-                  final item = category_list[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(item.image),
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 1,
-                            offset: Offset(0, 3),
+                  final item = categoryList[index];
+                  final isSelected =
+                      selectedCategory == categoryList[index].name;
+
+                  return GestureDetector(
+                    onTap: () {
+                      filter(index);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: isSelected
+                              ? Border.all(color: Colors.black, width: 3)
+                              : null,
+                          image: DecorationImage(
+                            image: AssetImage(item.image),
+                            fit: BoxFit.cover,
                           ),
-                        ],
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 1,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -156,6 +185,7 @@ class _InventoryState extends State<Inventory> {
             ),
 
             const SizedBox(height: 10),
+
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: Row(
@@ -165,21 +195,22 @@ class _InventoryState extends State<Inventory> {
                     width: 350,
                     height: 40,
                     child: ClipRRect(
-                        child: Image.asset("assets/images/new1.jpg",fit: BoxFit.cover,)),
-                    decoration: BoxDecoration(
-
-
+                      child: Image.asset(
+                        "assets/images/new1.jpg",
+                        fit: BoxFit.cover,
+                      ),
                     ),
-
                   ),
                 ],
               ),
             ),
-            // Product grid
+
+            // Product Grid
             Expanded(
               child: Consumer<StockProvider>(
                 builder: (context, stockProvider, child) {
-                  final products = stockProvider.list;
+                  final products =
+                  filterList.isEmpty ? stockProvider.list : filterList;
 
                   if (products.isEmpty) {
                     return const Center(
@@ -199,21 +230,28 @@ class _InventoryState extends State<Inventory> {
                             double value = 1.0;
                             if (controller.position.haveDimensions) {
                               value = controller.page! - index;
-                              value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+                              value = (1 - (value.abs() * 0.3))
+                                  .clamp(0.0, 1.0);
                             }
                             return Center(
                               child: Transform.scale(
                                 scale: Curves.easeOut.transform(value),
                                 child: InkWell(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> details(index:products[index],
-
-                                    )));
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => details(
+                                          index: products[index],
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     width: 340,
                                     height: 400,
-                                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 12),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(40),
                                       color: Colors.grey.shade300,
@@ -222,14 +260,17 @@ class _InventoryState extends State<Inventory> {
                                           color: Colors.black12,
                                           blurRadius: 15,
                                           offset: Offset(0, 10),
-                                        )
+                                        ),
                                       ],
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(40),
-                                      child: Image.asset(
-                                        products[index].image,
-                                        fit: BoxFit.cover,
+                                      child: Hero(
+                                        tag: products[index].image,
+                                        child: Image.asset(
+                                          products[index].image,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),

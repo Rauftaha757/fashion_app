@@ -1,4 +1,5 @@
 
+import 'package:exp/app_screens/cart.dart';
 import 'package:exp/app_screens/details_screen.dart';
 import 'package:exp/app_screens/testing.dart';
 import 'package:exp/model_classes/category_list.dart';
@@ -31,10 +32,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
            fontFamily: 'Poppins',
         ),
-      home:Inventory()
+      home:cart()
 
     );
   }

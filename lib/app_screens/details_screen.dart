@@ -45,21 +45,27 @@ class _details extends State<details>{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Back arrow
-                  Material(
-                    elevation: 2,
-                    shape: const CircleBorder(),
-                    color: Colors.white,
-                    child: Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(35),
-                      ),
-                      child: const Center(
-                        child: FaIcon(
-                          FontAwesomeIcons.arrowLeft,
-                          color: Colors.black,
-                          size: 24,
+                  InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                }
+                    ,
+                    child: Material(
+                      elevation: 2,
+                      shape: const CircleBorder(),
+                      color: Colors.white,
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(35),
+                        ),
+                        child: const Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.arrowLeft,
+                            color: Colors.black,
+                            size: 24,
+                          ),
                         ),
                       ),
                     ),
