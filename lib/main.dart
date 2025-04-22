@@ -3,6 +3,7 @@ import 'package:exp/app_screens/cart.dart';
 import 'package:exp/app_screens/details_screen.dart';
 import 'package:exp/app_screens/testing.dart';
 import 'package:exp/model_classes/category_list.dart';
+import 'package:exp/provider/cart_provider.dart';
 import 'package:exp/provider/counter%20provider.dart';
 import 'package:exp/provider/stock_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => StockProvider()),
         ChangeNotifierProvider(create: (_) => counter_provider()),
+        ChangeNotifierProvider(create: (_) => cart_provider()),
       ],
       child: MyApp(),
     ),
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
            fontFamily: 'Poppins',
         ),
-      home:cart()
+      home:Inventory()
 
     );
   }

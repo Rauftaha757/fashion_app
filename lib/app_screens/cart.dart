@@ -1,206 +1,257 @@
-
 import 'dart:ui';
-import 'package:exp/model_classes/category_list.dart';
 import 'package:exp/model_classes/items_list.dart';
+import 'package:exp/provider/cart_provider.dart';
 import 'package:exp/provider/counter%20provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:exp/provider/stock_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class cart extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-  return _cart();
-  }
+  State<cart> createState() => _CartState();
 }
-class _cart extends State{
+
+class _CartState extends State<cart> {
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    body: ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Back arrow
-              InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                }
-                ,
-                child: Material(
-                  elevation: 2,
-                  shape: const CircleBorder(),
-                  color: Colors.white,
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                    child: const Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.arrowLeft,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-// taha is great
-              // Name in the middle
-              Column(
-                children:  [
-                  Text(
-                    "T A Y L O R ",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                        fontSize: 26),
-                  ),
-                  Text(
-                    " S H A W N ",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                        fontSize: 22),
-                  ),
-                ],
-              ),
+    final List<item_model_class> items =
+    Provider.of<cart_provider>(context).getallitems();
 
-              // Shopping bag icon
-              Material(
-                elevation: 2,
-                shape: const CircleBorder(),
-                color: Colors.white,
-                child: Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                    border: Border.all(color: Color(0xFFF8F8F8)),
-                  ),
-                  child: const Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.bagShopping,
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
           children: [
-            Text(
-              "MY CART ",
-              style: TextStyle(
-
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Poppins",
-                  fontSize: 26),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: Container(
-            width: 250,
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(21),
-              color: Colors.grey.shade300,
-            ),
-            child: Center(
+            // Top Bar
+            Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-
-                        borderRadius: BorderRadius.circular(21)
+                  // Back arrow
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Material(
+                      elevation: 2,
+                      shape: const CircleBorder(),
+                      color: Colors.white,
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(35),
+                        ),
+                        child: const Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.arrowLeft,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                        ),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(21),
-                          child: Image.asset("assets/images/watch1.png",fit: BoxFit.fill,)),
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25,bottom: 25),
-                    child: Column(
-
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text("SEIKO Black Watch...",  style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Poppins",
-                            fontSize: 18),maxLines: 2,
-                            overflow: TextOverflow.ellipsis,),
-                        Text("1 x 4990.00",  style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Poppins",
-                            fontSize: 18),)
-                      ],
-
-                    ),
+                  // Name in the middle
+                  Column(
+                    children: const [
+                      Text(
+                        "T A Y L O R",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Poppins",
+                          fontSize: 26,
+                        ),
+                      ),
+                      Text(
+                        "S H A W N",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Poppins",
+                          fontSize: 22,
+                        ),
+                      ),
+                    ],
                   ),
 
+                  // Trash icon
+                  Material(
+                    elevation: 2,
+                    shape: const CircleBorder(),
+                    color: Colors.white,
+                    child: InkWell(
+                      onTap: () {
+                        Provider.of<cart_provider>(context, listen: false)
+                            .clear();
+                      },
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(35),
+                          border: Border.all(color: const Color(0xFFF8F8F8)),
+                        ),
+                        child: const Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.trash,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-          Padding(
-              padding: const EdgeInsets.all(8.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(21),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: Container(
-                width: 50,
-                height: 90,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2), // Optional tint
-                  borderRadius: BorderRadius.circular(21),
-                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(Icons.add),
-                    Text("1",style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                        fontSize: 20
-                    ),),
-                    Icon(Icons.remove),
-
-                  ],
+            // MY CART Title
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                "MY CART",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Poppins",
+                  fontSize: 26,
                 ),
               ),
             ),
-          ),
-        )
 
-      ],
-              )
-            ),
-          ),
+            // Cart List
+            Expanded(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(21),
+                        color: Colors.grey.shade300,
+                      ),
+                      child: Row(
+                        children: [
+                          // Item Image
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(21),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(21),
+                                child: Image.asset(
+                                  item.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Name and Price
+                          Flexible(
+                            flex: 2,
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 25),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Poppins",
+                                      fontSize: 18,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    "${Provider.of<counter_provider>(context).getItemCount(item.name)} x ${item.price}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Poppins",
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Counter
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(21),
+                              child: BackdropFilter(
+                                filter:
+                                ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                                child: Container(
+                                  width: 50,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(21),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.3),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Provider.of<counter_provider>(
+                                              context,
+                                              listen: false)
+                                              .increment(item.name);
+                                        },
+                                        child: const Icon(Icons.add),
+                                      ),
+                                      Text(
+                                        "${Provider.of<counter_provider>(context).getItemCount(item.name)}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Poppins",
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Provider.of<counter_provider>(
+                                              context,
+                                              listen: false)
+                                              .decrement(item.name);
+                                        },
+                                        child: const Icon(Icons.remove),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
         ),
-      ],
-    ),
-  );
+      ),
+    );
   }
-
 }

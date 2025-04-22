@@ -1,6 +1,7 @@
 import 'package:exp/app_screens/details_screen.dart';
 import 'package:exp/model_classes/category_list.dart';
 import 'package:exp/model_classes/items_list.dart';
+import 'package:exp/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:exp/provider/stock_provider.dart';
@@ -98,25 +99,47 @@ class _InventoryState extends State<Inventory> {
                       ),
                     ],
                   ),
-                  Material(
-                    elevation: 2,
-                    shape: const CircleBorder(),
-                    color: Colors.white,
-                    child: Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(35),
-                        border: Border.all(color: Color(0xFFF8F8F8)),
-                      ),
-                      child: const Center(
-                        child: FaIcon(
-                          FontAwesomeIcons.bagShopping,
-                          color: Colors.black,
-                          size: 24,
+                  Stack(
+                    children: [
+                      Material(
+                        elevation: 2,
+                        shape: const CircleBorder(),
+                        color: Colors.white,
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(35),
+                            border: Border.all(color: const Color(0xFFF8F8F8)),
+                          ),
+                          child: const Center(
+                            child: FaIcon(FontAwesomeIcons.bagShopping, color: Colors.black, size: 24),
+                          ),
                         ),
                       ),
-                    ),
+                      // Counter badge
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Consumer<cart_provider>(
+                          builder: (context, cart, _) {
+                            return cart.getallitems().isNotEmpty
+                                ? Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                "${cart.getallitems().length}",
+                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                            )
+                                : const SizedBox();
+                          },
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -206,7 +229,7 @@ class _InventoryState extends State<Inventory> {
             ),
 
             // Product Grid
-            Expanded(
+            SizedBox(
               child: Consumer<StockProvider>(
                 builder: (context, stockProvider, child) {
                   final products =
@@ -241,9 +264,8 @@ class _InventoryState extends State<Inventory> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => details(
-                                          index: products[index],
-                                        ),
+                                        builder: (context) => details(index: products[index])
+
                                       ),
                                     );
                                   },
