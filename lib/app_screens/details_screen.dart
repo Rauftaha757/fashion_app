@@ -108,7 +108,7 @@ class _DetailsState extends State<details> {
 
             // Animated image with Hero
             Hero(
-              tag: item.name,
+              tag: item.image,
               child: Container(
                 width: 380,
                 height: 400,
@@ -154,7 +154,9 @@ class _DetailsState extends State<details> {
                 ],
               ),
             ),
-
+SizedBox(
+  height: 25,
+),
             // Quantity selector
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
@@ -201,18 +203,18 @@ class _DetailsState extends State<details> {
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  Provider.of<cart_provider>(context, listen: false).addtocart(item,context);
-                  // ScaffoldMessenger.of(context).showSnackBar(
-                  //   SnackBar(
-                  //     content: Text("${item.name} added to cart"),
-                  //     duration: const Duration(seconds: 2),
-                  //     behavior: SnackBarBehavior.floating,
-                  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  //     backgroundColor: Colors.green.shade700,
-                  //   ),
-                  // );
-                  Navigator.push(context, MaterialPageRoute(builder: (_) =>  cart()));
+                  // Set the item price in counter_provider
+                  Provider.of<counter_provider>(context, listen: false)
+                      .setItemPrice(item.name, item.price);
+
+                  // Add item to cart
+                  Provider.of<cart_provider>(context, listen: false)
+                      .addtocart(item, context);
+
+                  // Navigate to cart
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => cart()));
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6E8C6D),
                   foregroundColor: Colors.white,

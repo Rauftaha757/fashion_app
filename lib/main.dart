@@ -1,5 +1,7 @@
 
+import 'package:exp/app_screens/card.dart';
 import 'package:exp/app_screens/cart.dart';
+import 'package:exp/app_screens/checkout_page.dart';
 import 'package:exp/app_screens/details_screen.dart';
 import 'package:exp/app_screens/testing.dart';
 import 'package:exp/model_classes/category_list.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'app_screens/login and signup page.dart';
+import 'app_screens/maps_page.dart';
 import 'app_screens/splash screen.dart';
 import 'app_screens/Inventory.dart';
 
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
            fontFamily: 'Poppins',
         ),
-      home:Inventory()
+      home:Checkout()
 
     );
   }

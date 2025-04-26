@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'checkout_page.dart';
+
 class cart extends StatefulWidget {
   @override
   State<cart> createState() => _CartState();
@@ -52,7 +54,6 @@ class _CartState extends State<cart> {
                       ),
                     ),
                   ),
-
                   // Name in the middle
                   Column(
                     children: const [
@@ -74,7 +75,6 @@ class _CartState extends State<cart> {
                       ),
                     ],
                   ),
-
                   // Trash icon
                   Material(
                     elevation: 2,
@@ -84,6 +84,8 @@ class _CartState extends State<cart> {
                       onTap: () {
                         Provider.of<cart_provider>(context, listen: false)
                             .clear();
+                        Provider.of<counter_provider>(context, listen: false)
+                            .clearcounter();
                       },
                       child: Container(
                         width: 70,
@@ -236,6 +238,7 @@ class _CartState extends State<cart> {
                                         },
                                         child: const Icon(Icons.remove),
                                       ),
+
                                     ],
                                   ),
                                 ),
@@ -248,7 +251,64 @@ class _CartState extends State<cart> {
                   );
                 },
               ),
-            )
+            ),
+
+
+            Container(
+             width: 400,
+              height: 150,
+              decoration:BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.grey.shade300
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                         Text("Total",style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Poppins",
+                    color: Colors.green,
+                    fontSize: 25,
+                  ),),
+                        SizedBox(
+                          width: 140,
+                        ),
+                        Text("\$${Provider.of<counter_provider>(context).getTotalPrice()}",style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                          fontFamily: "Poppins",
+                          fontSize: 25,
+                        ))
+                      ],
+                    )
+                  ),
+                  SizedBox(
+                    width: 350,
+                    height: 60,
+                    child: ElevatedButton(onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Checkout()));
+                    }  ,style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6E8C6D),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                        ), child: Text("Pay And confirm address",style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.75),
+                      fontFamily: "Poppins",
+                      fontSize: 22,
+                    ))),
+                  )
+                ],
+              ),
+
+
+
+       
+            ),
           ],
         ),
       ),
