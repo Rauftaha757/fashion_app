@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:exp/model_classes/items_list.dart';
+import 'package:exp/model_classes/user_modelclass.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -19,6 +22,7 @@ class DbHelper {
   Future<Database> opendb() async {
     final path = join(await getDatabasesPath(), "stock.db");
     return await openDatabase(
+
       path,
       version: 1,
       onCreate: (db, version) async {
@@ -29,6 +33,22 @@ class DbHelper {
             price REAL,
             image TEXT,
             category TEXT
+          )
+        ''');
+       await db.execute('''
+          CREATE TABLE user (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email Text,
+            password TEXT
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE myoder (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            price Text,
+            count integer
           )
         ''');
       },
@@ -45,4 +65,23 @@ class DbHelper {
     final List<Map<String, dynamic>> maps = await db.query("stock");
     return maps.map((map) => item_model_class.fromMap(map)).toList();
   }
+
+Future<void> insertuser(usermodel user) async{
+    final db= await getdb();
+    db.insert("user", user.tomap(),conflictAlgorithm: ConflictAlgorithm.replace);
 }
+
+  Future<List<usermodel>> getallUsers() async {
+    final db = await getdb();
+    final maps = await db.query("user");
+    // into list
+    return List.generate(maps.length, (i){
+      return usermodel.fromMap(maps[i]);
+    }
+    );
+
+  }
+
+}
+
+

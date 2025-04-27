@@ -1,54 +1,45 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:exp/database/local/db_helper.dart';
+import '../model_classes/user_modelclass.dart';
 
-class container extends StatelessWidget{
+class UserContainer extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-   return Scaffold(
-     body:Column(
-       mainAxisAlignment: MainAxisAlignment.center,
-       children: [
+  _UserContainerState createState() => _UserContainerState();
+}
 
-         Center(
-           child: Container(
-             width: 340,
-             height: 400,
-             margin: const EdgeInsets.symmetric(horizontal: 12),
-             decoration: BoxDecoration(
-               borderRadius: BorderRadius.circular(40),
-               color: Colors.grey.shade300,
-               boxShadow: [
-                 BoxShadow(
-                   color: Colors.black12,
-                   blurRadius: 15,
-                   offset: Offset(0, 10),
-                 )
-               ],
-             ),
-             child: ClipRRect(
-               borderRadius: BorderRadius.circular(40),
-               child: Image.asset(
-                 "assets/images/watch1.png",
-                 fit: BoxFit.cover,
-               ),
-             ),
-           ),
-         ),
-         ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF6E8C6D),
-    foregroundColor: Colors.white,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-    minimumSize: const Size(200, 70),
-    ), child:   Text(
-           "Add to Cart",
-           style: TextStyle(
-               fontWeight: FontWeight.bold,
-               fontFamily: "Poppins",
-               fontSize: 26),
-         ))
-       ],
-     )
-   );
+class _UserContainerState extends State<UserContainer> {
+  List<usermodel> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getUsers();
   }
 
+  getUsers() async {
+    List<usermodel> usersList = await DbHelper.getinstance().getallUsers();
+    setState(() {
+      users = usersList;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Users List")),
+      body: users.isEmpty
+          ? Center(child: CircularProgressIndicator())  // Show loading while fetching
+          : ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          final user = users[index];
+          return ListTile(
+            title: Text(user.name ?? "No Name"),
+            subtitle: Text(user.email ?? "No Email"),
+            leading: Text(user.password),
+          );
+        },
+      ),
+    );
+  }
 }

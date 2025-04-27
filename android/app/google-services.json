@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "999160534648",
+    "project_id": "taylorapp-3968b",
+    "storage_bucket": "taylorapp-3968b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999160534648:android:ccea29cc9056d5b19b3f8d",
+        "android_client_info": {
+          "package_name": "com.example.exp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPeYgwObtWGQFc11KPoILItr3f5EuOp44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

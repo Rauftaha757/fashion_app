@@ -9,15 +9,21 @@ import 'package:exp/provider/cart_provider.dart';
 import 'package:exp/provider/counter%20provider.dart';
 import 'package:exp/provider/stock_provider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'app_screens/login and signup page.dart';
 import 'app_screens/maps_page.dart';
 import 'app_screens/splash screen.dart';
 import 'app_screens/Inventory.dart';
+import 'firebase_options.dart';
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -41,7 +47,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
            fontFamily: 'Poppins',
         ),
-      home:Checkout()
+      home:AuthScreen()
+
 
     );
   }

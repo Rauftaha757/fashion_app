@@ -309,9 +309,14 @@ class _CartState extends State<cart> {
 
        
             ),
+            SizedBox(
+              height: 25,
+            )
           ],
         ),
+
       ),
+
     );
   }
 }

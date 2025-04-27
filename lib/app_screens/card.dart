@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class card extends StatefulWidget {
+class CardPage extends StatefulWidget {
   @override
-  _card createState() => _card();
+  _CardPageState createState() => _CardPageState();
 }
 
-class _card extends State<card> {
+class _CardPageState extends State<CardPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
@@ -25,33 +25,23 @@ class _card extends State<card> {
         ),
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-             child:    Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-
-                    const Text(
-                      " My Card",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                        fontSize: 30,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  "My Card",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Poppins",
+                    fontSize: 30,
+                  ),
                 ),
               ),
               SizedBox(height: 20),
-
-              // Card UI
               Center(
                 child: Container(
                   width: 370,
@@ -105,7 +95,9 @@ class _card extends State<card> {
                       ),
                       SizedBox(height: 6),
                       Text(
-                        cardNumberController.text.isEmpty ? "4084  1380  9012  3456" : cardNumberController.text,
+                        cardNumberController.text.isEmpty
+                            ? "4084  1380  9012  3456"
+                            : cardNumberController.text,
                         style: TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 2),
                       ),
                       SizedBox(height: 6),
@@ -133,12 +125,13 @@ class _card extends State<card> {
                           ),
                         ],
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            nameController.text.isEmpty ? "Chris Evans" : nameController.text.toUpperCase(),
+                            nameController.text.isEmpty
+                                ? "Chris Evans"
+                                : nameController.text.toUpperCase(),
                             style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
                           Column(
@@ -156,228 +149,147 @@ class _card extends State<card> {
               ),
               SizedBox(height: 20),
 
-              // Card Details Fields (Styled)
-             Column(
-               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-               children: [
-                 TextField(
-                   controller: nameController,
-                   decoration: InputDecoration(
-                     filled: true,
-                     fillColor: Colors.grey.shade100,
-                     labelText: "Cardholder Name",
-                     labelStyle: TextStyle(
-                       fontFamily: "Poppins",
-                       fontSize: 16,
-                       color: Colors.grey.shade700,
-                     ),
-                     floatingLabelStyle: TextStyle(
-                       fontFamily: "Poppins",
-                       fontSize: 18,
-                       color: Colors.black,
-                       fontWeight: FontWeight.bold,
-                     ),
-                     contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                     enabledBorder: OutlineInputBorder(
-                       borderRadius: BorderRadius.circular(15),
-                       borderSide: BorderSide(color: Colors.black12, width: 2),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderRadius: BorderRadius.circular(15),
-                       borderSide: BorderSide(color: Colors.black, width: 2.5),
-                     ),
-                   ),
-                 ),
+              // Input Fields
+              Column(
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: _buildInputDecoration("Cardholder Name"),
+                  ),
+                  SizedBox(height: 12),
+                  TextField(
+                    controller: cardNumberController,
+                    keyboardType: TextInputType.number,
+                    decoration: _buildInputDecoration("Card Number"),
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: expiryController,
+                          keyboardType: TextInputType.datetime,
+                          decoration: _buildInputDecoration("Expiry Date (MM/YY)"),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          controller: cvvController,
+                          keyboardType: TextInputType.number,
+                          obscureText: true,
+                          decoration: _buildInputDecoration("CVV"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
 
-                 SizedBox(height: 12),
-                 TextField(
-                   controller: nameController,
-                   decoration: InputDecoration(
-                     filled: true,
-                     fillColor: Colors.grey.shade100,
-                     labelText: "Card Number",
-                     labelStyle: TextStyle(
-                       fontFamily: "Poppins",
-                       fontSize: 16,
-                       color: Colors.grey.shade700,
-                     ),
-                     floatingLabelStyle: TextStyle(
-                       fontFamily: "Poppins",
-                       fontSize: 18,
-                       color: Colors.black,
-                       fontWeight: FontWeight.bold,
-                     ),
-                     contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                     enabledBorder: OutlineInputBorder(
-                       borderRadius: BorderRadius.circular(15),
-                       borderSide: BorderSide(color: Colors.black12, width: 2),
-                     ),
-                     focusedBorder: OutlineInputBorder(
-                       borderRadius: BorderRadius.circular(15),
-                       borderSide: BorderSide(color: Colors.black, width: 2.5),
-                     ),
-                   ),
-                 ),
+              // Save card switch
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Save your card information",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      value: saveCard,
+                      onChanged: (value) {
+                        setState(() {
+                          saveCard = value;
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ],
+                ),
+              ),
 
-                 SizedBox(height: 12),
-                 Row(
-                   children: [
-                     Expanded(
-                       child: TextField(
-                         controller: nameController,
-                         decoration: InputDecoration(
-                           filled: true,
-                           fillColor: Colors.grey.shade100,
-                           labelText: "Cardholder Name",
-                           labelStyle: TextStyle(
-                             fontFamily: "Poppins",
-                             fontSize: 16,
-                             color: Colors.grey.shade700,
-                           ),
-                           floatingLabelStyle: TextStyle(
-                             fontFamily: "Poppins",
-                             fontSize: 18,
-                             color: Colors.black,
-                             fontWeight: FontWeight.bold,
-                           ),
-                           contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                           enabledBorder: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(15),
-                             borderSide: BorderSide(color: Colors.black12, width: 2),
-                           ),
-                           focusedBorder: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(15),
-                             borderSide: BorderSide(color: Colors.black, width: 2.5),
-                           ),
-                         ),
-                       ),
+              SizedBox(height: 40),
 
-                     ),
-                     SizedBox(width: 12),
-                     Expanded(
-                       child:TextField(
-                         controller: nameController,
-                         decoration: InputDecoration(
-                           filled: true,
-                           fillColor: Colors.grey.shade100,
-                           labelText: "Cardholder Name",
-                           labelStyle: TextStyle(
-                             fontFamily: "Poppins",
-                             fontSize: 16,
-                             color: Colors.grey.shade700,
-                           ),
-                           floatingLabelStyle: TextStyle(
-                             fontFamily: "Poppins",
-                             fontSize: 18,
-                             color: Colors.black,
-                             fontWeight: FontWeight.bold,
-                           ),
-                           contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                           enabledBorder: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(15),
-                             borderSide: BorderSide(color: Colors.black12, width: 2),
-                           ),
-                           focusedBorder: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(15),
-                             borderSide: BorderSide(color: Colors.black, width: 2.5),
-                           ),
-                         ),
-                       ),
-
-                     ),
-                   ],
-                 ),
-                 SizedBox(height: 20),
-
-                 // Save Card Switch
-                 Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-                   child: Container(
-                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                     decoration: BoxDecoration(
-                       color: Colors.grey.shade100,
-                       borderRadius: BorderRadius.circular(12),
-                       boxShadow: [
-                         BoxShadow(
-                           color: Colors.black.withOpacity(0.05),
-                           blurRadius: 5,
-                           offset: Offset(0, 3),
-                         ),
-                       ],
-                     ),
-                     child: Row(
-                       children: [
-                         Expanded(
-                           child: Text(
-                             "Save your card information",
-                             style: TextStyle(
-                               fontFamily: "Poppins",
-                               fontSize: 16,
-                               fontWeight: FontWeight.w500,
-                               color: Colors.black87,
-                             ),
-                           ),
-                         ),
-                         Switch(
-                           value: saveCard,
-                           onChanged: (value) {
-                             setState(() {
-                               saveCard = value;
-                             });
-                           },
-                           activeColor: Colors.green,
-                         ),
-                       ],
-                     ),
-                   ),
-                 ),
-
-
-                 // Pay Button
-                 SizedBox(
-                   height: 90,
-                 ),
-                 Center(
-                   child: SizedBox(
-                     height: 60,
-                     width: 220,
-                     child: ElevatedButton(
-                       onPressed: () {
-                         Navigator.pop(context);
-                       },
-                       style: ElevatedButton.styleFrom(
-                         backgroundColor: Color(0xFF6E8C6D),
-                         foregroundColor: Colors.white,
-                         shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(30),
-                         ),
-                         elevation: 8,
-                         shadowColor: Colors.green.withOpacity(0.4),
-                       ),
-                       child: Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           SizedBox(width: 10),
-                           Text(
-                             "Save",
-                             style: TextStyle(
-                               fontFamily: "Poppins",
-                               fontSize: 20,
-                               fontWeight: FontWeight.bold,
-                               letterSpacing: 1,
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
-                   ),
-                 ),
-
-               ],
-             )
+              Center(
+                child: SizedBox(
+                  height: 60,
+                  width: 220,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF6E8C6D),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 8,
+                      shadowColor: Colors.green.withOpacity(0.4),
+                    ),
+                    child: Text(
+                      "Save",
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String label) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.grey.shade100,
+      labelText: label,
+      labelStyle: TextStyle(
+        fontFamily: "Poppins",
+        fontSize: 16,
+        color: Colors.grey.shade700,
+      ),
+      floatingLabelStyle: TextStyle(
+        fontFamily: "Poppins",
+        fontSize: 18,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(color: Colors.black12, width: 2),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(color: Colors.black, width: 2.5),
       ),
     );
   }
