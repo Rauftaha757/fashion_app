@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 class cart_provider extends ChangeNotifier {
   final List<item_model_class> _cart_items = [];
 
-  // keep your existing getter name
   List<item_model_class> getallitems() => _cart_items;
 
   // keep method name and parameter exactly as you wrote them
@@ -15,7 +14,6 @@ class cart_provider extends ChangeNotifier {
     _cart_items.any((cartItem) => cartItem.name == item.name);
 
     if (!alreadyExists) {
-      // 🛒 2. Not in cart → add it.
       _cart_items.add(item);
       notifyListeners();
     } else {

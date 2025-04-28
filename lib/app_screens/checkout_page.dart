@@ -1,4 +1,8 @@
 import 'package:exp/app_screens/card.dart';
+import 'package:exp/database/local/db_helper.dart';
+import 'package:exp/model_classes/oder_model_class.dart';
+import 'package:exp/model_classes/user_modelclass.dart';
+import 'package:exp/provider/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exp/model_classes/items_list.dart';
@@ -29,6 +33,7 @@ class _Checkout extends State<Checkout> {
 
   @override
   Widget build(BuildContext context) {
+    final list= Provider.of<cart_provider>(context,listen: false).getallitems();
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -449,7 +454,24 @@ class _Checkout extends State<Checkout> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Confirm Order action
+
+                            final cartList = Provider.of<cart_provider>(context, listen: false).getallitems();
+
+                            List<OderModel> cartItems = cartList.map((items) {
+                              final count = Provider.of<counter_provider>(context, listen: false).getItemCount(items.name);
+                              final user = Provider.of<UserProvider>(context).getUserId();
+                              return OderModel(
+                                name: items.name,
+                                price: items.price,
+                                count: count,
+                                userId: user ?? 0,
+                              );
+                            }).toList();
+                            for(var oders in cartItems){
+                              DbHelper.getinstance().insertoder(oders);
+                            }
+
+
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF6E8C6D),

@@ -13,13 +13,19 @@ class usermodel {
   });
 
   Map<String, dynamic> tomap() {
-    return {
-      "id": id,
+    final map = {
       "name": name,
       "email": email,
       "password": password,
     };
+
+    if (id != null && id != 0) {
+      map["id"] = id.toString();
+    }
+
+    return map;
   }
+
 
   factory usermodel.fromMap(Map<String, dynamic> map) {
     return usermodel(

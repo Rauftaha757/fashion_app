@@ -4,7 +4,11 @@ import 'package:exp/model_classes/user_modelclass.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
+import 'package:exp/database/local/db_helper.dart';
+import '../model_classes/user_modelclass.dart';
+import 'package:exp/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Initialize Firebase
@@ -289,13 +293,22 @@ class _AuthScreenState extends State<AuthScreen> {
                                     onPressed: _isLoading ? null : () async {
                                       bool success = await _authenticate();
                                       if (success && !isLogin) {
-                                     usermodel newuser=  usermodel(id: 0,name: _nameController.text, email: _emailController.text, password: _passwordController.text);
-                                     try {
-                                       await DbHelper.getinstance().insertuser(newuser);
-                                       print("User registered successfully");
-                                     } catch (e) {
-                                       print("Error registering user: $e");
-                                     }
+                                        usermodel newuser = usermodel(
+                                          id: 0, // Auto-generated ID
+                                          name: _nameController.text,
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                        );
+                                        try {
+                                          await DbHelper.getinstance().insertuser(newuser);
+                                          print("User registered successfully");
+
+                                          // Fetch all users after registration and update UI
+                                          await Provider.of<user_provider>(context, listen: false).getusers();
+                                          print('All users: ${Provider.of<user_provider>(context, listen: false).userList}');
+                                        } catch (e) {
+                                          print("Error registering user: $e");
+                                        }
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -305,8 +318,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                     ),
                                     child: _isLoading
                                         ? const CircularProgressIndicator(color: Colors.white)
-                                        : const Text('Register', style: TextStyle(fontFamily: "Poppins", fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600)),
+                                        : const Text(
+                                      'Register',
+                                      style: TextStyle(fontFamily: "Poppins", fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
+                                    ),
                                   ),
+
                                 ),
                               ],
                               const SizedBox(height: 14),

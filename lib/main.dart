@@ -8,6 +8,7 @@ import 'package:exp/model_classes/category_list.dart';
 import 'package:exp/provider/cart_provider.dart';
 import 'package:exp/provider/counter%20provider.dart';
 import 'package:exp/provider/stock_provider.dart';
+import 'package:exp/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => StockProvider()),
         ChangeNotifierProvider(create: (_) => counter_provider()),
         ChangeNotifierProvider(create: (_) => cart_provider()),
+        ChangeNotifierProvider(create: (_) => user_provider()),
       ],
       child: MyApp(),
     ),

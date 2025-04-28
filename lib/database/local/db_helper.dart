@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:exp/model_classes/items_list.dart';
+import 'package:exp/model_classes/oder_model_class.dart';
 import 'package:exp/model_classes/user_modelclass.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -22,9 +23,11 @@ class DbHelper {
   Future<Database> opendb() async {
     final path = join(await getDatabasesPath(), "stock.db");
     return await openDatabase(
-
       path,
       version: 1,
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE stock (
@@ -35,21 +38,25 @@ class DbHelper {
             category TEXT
           )
         ''');
-       await db.execute('''
-          CREATE TABLE user (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            email Text,
-            password TEXT
-          )
-        ''');
         await db.execute('''
-          CREATE TABLE myoder (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            price Text,
-            count integer
-          )
+  CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT,
+    password TEXT
+  )
+''');
+
+        await db.execute('''
+         CREATE TABLE myoder (
+  oderid INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+  price real,
+  count INTEGER,
+  userId INTEGER,
+  FOREIGN KEY (userId) REFERENCES user(id)
+)
+
         ''');
       },
     );
@@ -66,10 +73,15 @@ class DbHelper {
     return maps.map((map) => item_model_class.fromMap(map)).toList();
   }
 
-Future<void> insertuser(usermodel user) async{
-    final db= await getdb();
-    db.insert("user", user.tomap(),conflictAlgorithm: ConflictAlgorithm.replace);
-}
+  Future<void> insertuser(usermodel user) async {
+    final db = await getdb();
+    await db.insert("user", user.tomap(), conflictAlgorithm: ConflictAlgorithm.ignore);
+
+    // DEBUG: How many users exist?
+    final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM user'));
+    print("Total users in database after inserting: $count");
+  }
+
 
   Future<List<usermodel>> getallUsers() async {
     final db = await getdb();
@@ -81,7 +93,31 @@ Future<void> insertuser(usermodel user) async{
     );
 
   }
+  Future<void> insertoder(OderModel oder) async{
+    final db= await getdb();
+    await db.insert("myoder", oder.toMap(),conflictAlgorithm: ConflictAlgorithm.ignore);
+  }
+  Future<List<OderModel>> gettalloder()async{
+    final db= await getdb();
+    final maps=await db.query("myoder");
+    return List.generate(maps.length, (i){
+      return OderModel.fromMap(maps[i]);
+    });
+  }
+  Future<List<OderModel>> getOrdersByUserId(int userId) async {
+    final db = await getdb();
+    final List<Map<String, dynamic>> maps = await db.query(
+      "myoder",
+      where: "userId = ?",
+      whereArgs: [userId],
+    );
+
+    return List.generate(maps.length, (i) {
+      return OderModel.fromMap(maps[i]);
+    });
+  }
 
 }
+
 
 
