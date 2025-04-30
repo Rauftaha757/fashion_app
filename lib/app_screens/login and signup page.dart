@@ -294,7 +294,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                       bool success = await _authenticate();
                                       if (success && !isLogin) {
                                         usermodel newuser = usermodel(
-                                          id: 0, // Auto-generated ID
                                           name: _nameController.text,
                                           email: _emailController.text,
                                           password: _passwordController.text,
@@ -304,8 +303,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                           print("User registered successfully");
 
                                           // Fetch all users after registration and update UI
-                                          await Provider.of<user_provider>(context, listen: false).getusers();
-                                          print('All users: ${Provider.of<user_provider>(context, listen: false).userList}');
+                                          await Provider.of<UserProvider>(context, listen: false).getUsers();
+                                          print('All users: ${Provider.of<UserProvider>(context, listen: false).userList}');
                                         } catch (e) {
                                           print("Error registering user: $e");
                                         }

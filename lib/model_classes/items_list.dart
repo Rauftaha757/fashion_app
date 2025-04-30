@@ -1,30 +1,45 @@
- class item_model_class{
+class item_model_class {
+  int? id;
   String name;
   double price;
   String image;
   String category;
+
   item_model_class({
+    this.id,
     required this.name,
     required this.price,
     required this.image,
     required this.category,
- });
-Map<String, dynamic> toMap(){
-  return {
-    'name':name,
-    'price': price,
-    'image': image,
-    'category':category,
-  };
- }
- factory item_model_class.fromMap(Map<String, dynamic> Map)=> item_model_class(
-  name: Map['name'],
-  price: Map['price'],
-  image: Map['image'],
-  category: Map['category']
-  );
- }
- List<item_model_class> show_stock = [
+  });
+  Map<String, dynamic> toMap() {
+    final map = {
+      'name': name,
+      'price': price,
+      'image': image,
+      'category': category,
+    };
+
+    if (id != null) {
+      map['id'] = id.toString();
+    }
+
+    return map;
+  }
+
+  // Create object from Map
+  factory item_model_class.fromMap(Map<String, dynamic> map) {
+    return item_model_class(
+      id: map['id'], // ✅ This is necessary
+      name: map['name'],
+      price: map['price'].toDouble(),
+      image: map['image'],
+      category: map['category'],
+    );
+  }
+}
+
+List<item_model_class> show_stock = [
    // Watches
    item_model_class(
      name: "Timex Classic Black Dial Watch",

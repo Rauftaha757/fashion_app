@@ -453,27 +453,35 @@ class _Checkout extends State<Checkout> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
+                            onPressed: () async {
+                              final cartList = Provider.of<cart_provider>(context, listen: false).getallitems();
+                              final user = Provider.of<UserProvider>(context, listen: false).getUserId();
 
-                            final cartList = Provider.of<cart_provider>(context, listen: false).getallitems();
+                              if (user == null) {
+                                print("No logged-in user. Cannot place order.");
+                                return;
+                              }
 
-                            List<OderModel> cartItems = cartList.map((items) {
-                              final count = Provider.of<counter_provider>(context, listen: false).getItemCount(items.name);
-                              final user = Provider.of<UserProvider>(context).getUserId();
-                              return OderModel(
-                                name: items.name,
-                                price: items.price,
-                                count: count,
-                                userId: user ?? 0,
-                              );
-                            }).toList();
-                            for(var oders in cartItems){
-                              DbHelper.getinstance().insertoder(oders);
+                              List<OderModel> cartItems = cartList.map((items) {
+                                final count = Provider.of<counter_provider>(context, listen: false).getItemCount(items.name);
+
+                                return OderModel(
+                                  name: items.name,
+                                  price: items.price,
+                                  count: count,
+                                  userId: user, // ✅ Direct userId
+                                );
+                              }).toList();
+
+                              for (var order in cartItems) {
+                                await DbHelper.getinstance().insertoder(order);
+                              }
+
+                              print("All cart items placed as orders successfully!");
                             }
 
 
-                          },
-                          style: ElevatedButton.styleFrom(
+                            ,style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF6E8C6D),
                             padding: EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(

@@ -1,9 +1,8 @@
 class usermodel {
-  int ?id;
+  int? id;
   String name;
   String email;
   String password;
-
 
   usermodel({
     this.id,
@@ -19,21 +18,16 @@ class usermodel {
       "password": password,
     };
 
-    if (id != null && id != 0) {
-      map["id"] = id.toString();
-    }
 
     return map;
   }
 
-
   factory usermodel.fromMap(Map<String, dynamic> map) {
     return usermodel(
-      id: map['id'],
-      name: map['name'],
-      email: map['email'],
-      password: map['password'],
+      id: map['id'] != null ? int.tryParse(map['id'].toString()) : null,
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      password: map['password'] ?? '',
     );
   }
-
 }

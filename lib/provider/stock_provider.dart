@@ -23,6 +23,18 @@ class StockProvider extends ChangeNotifier {
     _list.add(item);
     notifyListeners();
   }
+  Future<void> updateItem(item_model_class item) async {
+    await DbHelper.getinstance().updateItem(item);
+    await fetchData(); // refresh local list
+  }
+
+  Future<void> deleteItem(int id) async {
+    await DbHelper.getinstance().deleteItem(id);
+    _list.removeWhere((item) => item.id == id);
+    notifyListeners();
+  }
+
+
   void loadInitialStock(List<item_model_class> items) {
     _list = items;
     insertingData(); // Save to DB and refresh

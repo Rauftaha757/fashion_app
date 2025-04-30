@@ -72,7 +72,24 @@ class DbHelper {
     final List<Map<String, dynamic>> maps = await db.query("stock");
     return maps.map((map) => item_model_class.fromMap(map)).toList();
   }
+  Future<void> updateItem(item_model_class item) async {
+    final db = await getdb();
+    await db.update(
+      "stock",
+      item.toMap(),
+      where: "id = ?",
+      whereArgs: [item.id],
+    );
+  }
 
+  Future<void> deleteItem(int id) async {
+    final db = await getdb();
+    await db.delete(
+      "stock",
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
   Future<void> insertuser(usermodel user) async {
     final db = await getdb();
     await db.insert("user", user.tomap(), conflictAlgorithm: ConflictAlgorithm.ignore);
@@ -93,10 +110,17 @@ class DbHelper {
     );
 
   }
-  Future<void> insertoder(OderModel oder) async{
-    final db= await getdb();
-    await db.insert("myoder", oder.toMap(),conflictAlgorithm: ConflictAlgorithm.ignore);
+  Future<void> insertoder(OderModel oder) async {
+    final db = await getdb();
+    if (oder.userId == null || oder.userId == 0) {
+      print('Invalid userId');
+      return;
+    }
+    await db.insert("myoder", oder.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
+    final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM myoder'));
+    print("Total orders in database after inserting: $count");
   }
+
   Future<List<OderModel>> gettalloder()async{
     final db= await getdb();
     final maps=await db.query("myoder");

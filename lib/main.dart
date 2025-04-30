@@ -1,10 +1,12 @@
 
+import 'package:exp/app_screens/admin.dart';
 import 'package:exp/app_screens/card.dart';
 import 'package:exp/app_screens/cart.dart';
 import 'package:exp/app_screens/checkout_page.dart';
 import 'package:exp/app_screens/details_screen.dart';
-import 'package:exp/app_screens/testing.dart';
+import 'package:exp/app_screens/test.dart';
 import 'package:exp/model_classes/category_list.dart';
+import 'package:exp/provider/oder_provider.dart';
 import 'package:exp/provider/cart_provider.dart';
 import 'package:exp/provider/counter%20provider.dart';
 import 'package:exp/provider/stock_provider.dart';
@@ -31,7 +33,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => StockProvider()),
         ChangeNotifierProvider(create: (_) => counter_provider()),
         ChangeNotifierProvider(create: (_) => cart_provider()),
-        ChangeNotifierProvider(create: (_) => user_provider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => oder_provider()),
       ],
       child: MyApp(),
     ),
